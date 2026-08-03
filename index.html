@@ -1,144 +1,822 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HEPTA - Privacy Policy</title>
+    <title>HEPTA - Privacy Policy & Web Portal</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            400: '#818cf8',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            900: '#312e81',
+                        },
+                        neon: {
+                            cyan: '#06b6d4',
+                            purple: '#a855f7',
+                            emerald: '#10b981',
+                            rose: '#f43f5e'
+                        }
+                    },
+                    animation: {
+                        'gradient-x': 'gradientX 8s ease infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-glow': 'pulseGlow 4s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        gradientX: {
+                            '0%, 100%': { 'background-size': '200% 200%', 'background-position': 'left center' },
+                            '50%': { 'background-size': '200% 200%', 'background-position': 'right center' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-8px)' },
+                        },
+                        pulseGlow: {
+                            '0%, 100%': { opacity: '0.3', filter: 'blur(35px)' },
+                            '50%': { opacity: '0.6', filter: 'blur(50px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
-        :root {
-            --bg-color: #121212;
-            --surface-color: #1E1E1E;
-            --text-primary: #FFFFFF;
-            --text-secondary: rgba(255, 255, 255, 0.7);
-            --text-muted: rgba(255, 255, 255, 0.4);
-            --accent-color: #6366F1;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-primary);
-            line-height: 1.6;
-            padding: 40px 20px;
-            max-width: 800px;
-            margin: 0 auto;
+            font-family: 'Poppins', sans-serif;
+            background-color: #060913;
+            color: #f1f5f9;
+            overflow-x: hidden;
+            position: relative;
         }
 
-        header {
-            margin-bottom: 48px;
-            text-align: center;
+        /* Framer-Motion style initial reveal state with explicit isolation */
+        .framer-reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            isolation: isolate;
         }
 
-        h1 {
-            font-size: 2.5rem;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            margin-bottom: 8px;
+        .framer-reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
-        .effective-date {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+        /* Glassmorphism Card Style - Opaque background fixes layer bleed-through */
+        .glass-card {
+            background: #0b0f19;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+            position: relative;
+            z-index: 1;
+            isolation: isolate;
         }
 
-        section {
-            background-color: var(--surface-color);
-            padding: 32px;
-            border-radius: 16px;
-            margin-bottom: 24px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        .glass-card:hover {
+            border-color: rgba(99, 102, 241, 0.4);
+            box-shadow: 0 15px 35px -5px rgba(99, 102, 241, 0.2);
         }
 
-        h2 {
-            color: var(--accent-color);
-            font-size: 1.25rem;
-            margin-bottom: 16px;
-            font-weight: 700;
+        /* Gradient Border Glow Box */
+        .gradient-border-card {
+            position: relative;
+            background: #0b0f19;
+            border-radius: 1.25rem;
+            z-index: 1;
+            isolation: isolate;
         }
 
-        p {
-            color: var(--text-secondary);
-            font-size: 1rem;
-            margin-bottom: 16px;
+        .gradient-border-card::before {
+            content: '';
+            position: absolute;
+            top: -1px; left: -1px; right: -1px; bottom: -1px;
+            background: linear-gradient(135deg, #6366f1, #a855f7, #06b6d4, #10b981);
+            border-radius: 1.3rem;
+            z-index: -1;
+            opacity: 0.5;
+            transition: opacity 0.4s ease;
         }
 
-        p:last-child {
-            margin-bottom: 0;
+        .gradient-border-card:hover::before {
+            opacity: 1;
         }
 
-        a {
-            color: var(--accent-color);
-            text-decoration: none;
+        /* Glass Navbar */
+        .glass-nav {
+            background: rgba(6, 9, 19, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
 
-        a:hover {
-            text-decoration: underline;
+        /* Background Animated Glow Blobs */
+        .bg-glow-1 {
+            position: fixed;
+            top: -10%;
+            left: 15%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.18) 0%, rgba(0, 0, 0, 0) 70%);
+            pointer-events: none;
+            z-index: 0;
         }
 
-        footer {
-            margin-top: 48px;
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 0.9rem;
+        .bg-glow-2 {
+            position: fixed;
+            bottom: -15%;
+            right: 10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Mesh Canvas background */
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.35;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #060913;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #334155;
+        }
+
+        /* Print Media Styling */
+        @media print {
+            body { background: white !important; color: black !important; }
+            .no-print, nav, footer, #particle-canvas, .bg-glow-1, .bg-glow-2 { display: none !important; }
+            .glass-card { background: none !important; border: 1px solid #ccc !important; color: black !important; box-shadow: none !important; }
+            h1, h2, h3, p, span, div { color: black !important; }
         }
     </style>
 </head>
-<body>
+<body class="relative min-h-screen text-slate-200 antialiased selection:bg-brand-500 selection:text-white">
 
-    <header>
-        <h1>HEPTA Privacy Policy</h1>
-        <div class="effective-date">Effective Date: July 2026</div>
-    </header>
+    <canvas id="particle-canvas"></canvas>
+    <div class="bg-glow-1 animate-pulse-glow"></div>
+    <div class="bg-glow-2 animate-pulse-glow" style="animation-delay: 2s;"></div>
 
-    <main>
-        <section>
-            <h2>1. Local-First Data Storage</h2>
-            <p>HEPTA is architected with a strict privacy-first, local-first philosophy. All of your tasks, notes, routines, and milestones are stored securely on your local device using an encrypted database.</p>
-            <p>We do not transmit, sync, or backup your tasks to any external servers without your explicit manual action. Your data belongs to you.</p>
-        </section>
+    <!-- Navigation Bar -->
+    <nav class="glass-nav sticky top-0 z-50 py-3.5 px-4 sm:px-8 no-print">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="relative w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 via-neon-purple to-neon-cyan p-[1px] shadow-lg shadow-brand-500/20 group-hover:scale-105 transition-all duration-300">
+                    <div class="w-full h-full bg-slate-950 rounded-[11px] flex items-center justify-center">
+                        <svg class="w-5 h-5 text-brand-400 group-hover:text-white transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="12 2 19 6.5 22 14.5 16 21 8 21 2 14.5 5 6.5 12 2"></polygon>
+                        </svg>
+                    </div>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-xl font-extrabold tracking-tight text-white group-hover:text-brand-400 transition-colors">HEPTA</span>
+                        <span class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-brand-500/10 text-brand-400 border border-brand-500/30 uppercase tracking-widest">v2.0</span>
+                    </div>
+                    <span class="text-[11px] text-slate-400 block -mt-0.5 font-medium">Privacy & Web Ecosystem</span>
+                </div>
+            </a>
 
-        <section>
-            <h2>2. Biometric Vault Security</h2>
-            <p>The HEPTA Vault utilizes Android's native Biometric API (Fingerprint/Face Unlock). Your biometric data never leaves your device's secure hardware element and is completely inaccessible to the HEPTA app itself. It is used strictly to verify your identity locally.</p>
-        </section>
+            <!-- Quick Action Links -->
+            <div class="flex items-center gap-2 sm:gap-3">
+                <a href="https://weekstack-web.vercel.app/" target="_blank" rel="noopener noreferrer"
+                   class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold text-white bg-gradient-to-r from-brand-600 via-indigo-600 to-neon-purple hover:from-brand-500 hover:to-neon-purple shadow-lg shadow-brand-500/25 hover:shadow-brand-500/40 transform hover:-translate-y-0.5 transition-all">
+                    <i class="fa-solid fa-globe"></i>
+                    <span class="hidden sm:inline">Launch Web App</span>
+                    <span class="sm:hidden">Web App</span>
+                    <i class="fa-solid fa-arrow-up-right-from-square text-[10px] opacity-80"></i>
+                </a>
 
-        <section>
-            <h2>3. Calendar Integration</h2>
-            <p>If you choose to grant Calendar permissions to HEPTA, the app reads your calendar events strictly locally to display your daily load and schedule on the grid. We do not store, modify, or transmit your calendar data externally to our servers or any third parties.</p>
-        </section>
+                <button onclick="window.print()" class="hidden md:inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:text-white bg-slate-900/80 hover:bg-slate-800 border border-slate-700/60 transition-all">
+                    <i class="fa-solid fa-print"></i>
+                    <span>Print</span>
+                </button>
+            </div>
+        </div>
+    </nav>
 
-        <section>
-            <h2>4. Third-Party Tracking</h2>
-            <p>HEPTA is built to be a focused environment. We do not use any third-party analytics, ad-tracking, or telemetry SDKs. We do not sell your usage data because we do not collect it.</p>
-        </section>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 relative z-10">
 
-        <section>
-            <h2>5. Data Deletion</h2>
-            <p>Because HEPTA is a local-first application, you have complete control over your data. Uninstalling the app or clearing the app's data through your Android system settings will permanently and instantly delete all your information. Please ensure you have manually backed up your data if you intend to keep it.</p>
-        </section>
+        <!-- Hero Header -->
+        <header class="text-center max-w-3xl mx-auto mb-12 framer-reveal">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-900/90 border border-brand-500/30 text-brand-400 text-xs font-semibold mb-6 shadow-xl backdrop-blur-md">
+                <span class="w-2 h-2 rounded-full bg-neon-emerald animate-ping"></span>
+                <span>100% Local-First Architecture • Web & Mobile</span>
+            </div>
 
-        <section>
-            <h2>6. Changes to this Policy</h2>
-            <p>We may update this Privacy Policy from time to time to reflect changes in our practices or for operational, legal, or regulatory reasons. We will notify you of any material changes by updating the "Effective Date" at the top of this policy.</p>
-        </section>
+            <h1 class="text-4xl sm:text-6xl font-black tracking-tight text-white mb-6 leading-tight">
+                Your Data Stays <br class="hidden sm:inline"/>
+                <span class="bg-clip-text text-transparent bg-gradient-to-r from-brand-400 via-neon-purple to-neon-cyan animate-gradient-x">
+                    Completely Yours.
+                </span>
+            </h1>
 
-        <section>
-            <h2>7. Contact Us</h2>
-            <p>If you have any questions or concerns regarding this privacy policy or your data, please contact the developer team at Zincstate.</p>
-        </section>
-    </main>
+            <p class="text-base sm:text-lg text-slate-300 leading-relaxed font-normal">
+                HEPTA is built from the ground up for strict digital sovereignty. Whether using our Android App or our official web portal at <strong class="text-white">WeekStack</strong>, your tasks and notes never touch external servers.
+            </p>
 
-    <footer>
-        &copy; 2026 Zincstate. All rights reserved.
-    </footer>
+            <!-- Metadata Badges -->
+            <div class="mt-8 flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-xs text-slate-400 font-medium border-y border-slate-800/80 py-4">
+                <div class="flex items-center gap-2">
+                    <i class="fa-regular fa-calendar-check text-brand-400"></i>
+                    <span>Effective: <strong>July 2026</strong></span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-shield-halved text-neon-emerald"></i>
+                    <span>Zero Server Sync</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-building-shield text-neon-cyan"></i>
+                    <span>Publisher: <strong>Zincstate</strong></span>
+                </div>
+            </div>
+        </header>
 
+        <div class="framer-reveal mb-12">
+            <div class="gradient-border-card p-6 sm:p-8 shadow-2xl overflow-hidden relative">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                    <div class="lg:col-span-7 space-y-4">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-neon-purple/10 border border-neon-purple/30 text-neon-purple text-xs font-semibold">
+                            <i class="fa-solid fa-sparkles"></i>
+                            <span>Official Web Platform</span>
+                        </div>
+
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                            HEPTA Web Client (WeekStack)
+                        </h2>
+
+                        <p class="text-sm text-slate-300 leading-relaxed">
+                            Experience HEPTA directly in your browser without compromising your privacy. HEPTA Web leverages browser local storage & IndexedDB so your task boards, schedules, and workflows remain completely offline-ready and private on your machine.
+                        </p>
+
+                        <div class="pt-2 flex flex-wrap items-center gap-3">
+                            <a href="https://weekstack-web.vercel.app/" target="_blank" rel="noopener noreferrer"
+                               class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-brand-600 via-indigo-600 to-neon-purple hover:scale-105 transition-all shadow-lg shadow-brand-500/30">
+                                <span>Access weekstack-web.vercel.app</span>
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+
+                            <button onclick="copyToClipboard('https://weekstack-web.vercel.app/', 'HEPTA Web URL')"
+                                    class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-300 bg-slate-900 hover:bg-slate-800 border border-slate-700/80 hover:text-white transition-all">
+                                <i class="fa-regular fa-copy"></i>
+                                <span>Copy Link</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-5">
+                        <div class="bg-slate-950/90 rounded-2xl p-5 border border-slate-800 space-y-3 font-mono text-xs shadow-inner">
+                            <div class="flex items-center justify-between pb-2 border-b border-slate-800 text-slate-400">
+                                <span class="flex items-center gap-2">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
+                                    <span class="w-2.5 h-2.5 rounded-full bg-yellow-500"></span>
+                                    <span class="w-2.5 h-2.5 rounded-full bg-green-500"></span>
+                                </span>
+                                <span class="text-[10px] uppercase font-sans tracking-wider font-bold text-slate-400">Web App Architecture</span>
+                            </div>
+
+                            <div class="space-y-2 text-slate-300">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-slate-400">URL Endpoint:</span>
+                                    <span class="text-neon-cyan font-semibold">weekstack-web.vercel.app</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-slate-400">Database:</span>
+                                    <span class="text-neon-emerald font-semibold">Browser IndexedDB / Local</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-slate-400">Cloud Sync:</span>
+                                    <span class="text-rose-400 font-semibold">DISABLED (0% Data Leave)</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-slate-400">Tracking Cookies:</span>
+                                    <span class="text-neon-emerald font-semibold">NONE</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-12 no-print framer-reveal">
+            
+            <div class="glass-card rounded-2xl p-6">
+                <div class="w-12 h-12 rounded-2xl bg-neon-emerald/10 border border-neon-emerald/20 text-neon-emerald flex items-center justify-center mb-4 text-xl">
+                    <i class="fa-solid fa-hard-drive"></i>
+                </div>
+                <h3 class="text-white font-bold text-base mb-1">Local Database</h3>
+                <p class="text-xs text-slate-400 leading-relaxed">Tasks and schedule records remain stored locally on your device or browser hardware.</p>
+            </div>
+
+            <div class="glass-card rounded-2xl p-6">
+                <div class="w-12 h-12 rounded-2xl bg-brand-500/10 border border-brand-500/20 text-brand-400 flex items-center justify-center mb-4 text-xl">
+                    <i class="fa-solid fa-fingerprint"></i>
+                </div>
+                <h3 class="text-white font-bold text-base mb-1">Biometric Vault</h3>
+                <p class="text-xs text-slate-400 leading-relaxed">Authentication utilizes device biometric chips. We cannot read your credentials.</p>
+            </div>
+
+            <div class="glass-card rounded-2xl p-6">
+                <div class="w-12 h-12 rounded-2xl bg-neon-cyan/10 border border-neon-cyan/20 text-neon-cyan flex items-center justify-center mb-4 text-xl">
+                    <i class="fa-solid fa-eye-slash"></i>
+                </div>
+                <h3 class="text-white font-bold text-base mb-1">Zero Telemetry</h3>
+                <p class="text-xs text-slate-400 leading-relaxed">No third-party SDKs, ad trackers, or behavioural analytics are included.</p>
+            </div>
+
+            <div class="glass-card rounded-2xl p-6">
+                <div class="w-12 h-12 rounded-2xl bg-neon-purple/10 border border-neon-purple/20 text-neon-purple flex items-center justify-center mb-4 text-xl">
+                    <i class="fa-solid fa-laptop-code"></i>
+                </div>
+                <h3 class="text-white font-bold text-base mb-1">Web Sovereignty</h3>
+                <p class="text-xs text-slate-400 leading-relaxed">The web app at weekstack-web.vercel.app operates in client-only mode.</p>
+            </div>
+
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative">
+
+            <!-- Sidebar Navigation & Quick Search -->
+            <aside class="lg:col-span-4 lg:sticky lg:top-24 no-print space-y-4 framer-reveal relative z-20">
+                
+                <!-- Quick Search Input -->
+                <div class="glass-card p-4 rounded-2xl">
+                    <label for="search-input" class="sr-only">Search Policy</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                        <input id="search-input" type="text" placeholder="Search policy keywords..." 
+                               onkeyup="filterSections()"
+                               class="w-full bg-slate-950/90 border border-slate-800 rounded-xl pl-9 pr-4 py-2.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-brand-500 transition-all">
+                    </div>
+                </div>
+
+                <!-- Table of Contents -->
+                <div class="glass-card p-6 rounded-2xl">
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-list-ul text-brand-400"></i>
+                        <span>Policy Navigation</span>
+                    </h2>
+                    <nav class="space-y-1.5" id="toc-nav">
+                        <a href="#section-1" class="toc-link flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition-all">
+                            <span class="w-5 h-5 rounded-md bg-brand-500/20 text-brand-400 text-[10px] font-bold flex items-center justify-center">1</span>
+                            <span>Local-First Data Storage</span>
+                        </a>
+                        <a href="#section-2" class="toc-link flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition-all">
+                            <span class="w-5 h-5 rounded-md bg-brand-500/20 text-brand-400 text-[10px] font-bold flex items-center justify-center">2</span>
+                            <span>Biometric Vault Security</span>
+                        </a>
+                        <a href="#section-3" class="toc-link flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition-all">
+                            <span class="w-5 h-5 rounded-md bg-brand-500/20 text-brand-400 text-[10px] font-bold flex items-center justify-center">3</span>
+                            <span>Calendar & Grid Schedule</span>
+                        </a>
+                        <a href="#section-4" class="toc-link flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition-all">
+                            <span class="w-5 h-5 rounded-md bg-neon-purple/20 text-neon-purple text-[10px] font-bold flex items-center justify-center">4</span>
+                            <span>HEPTA Web Client Policy</span>
+                        </a>
+                        <a href="#section-5" class="toc-link flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition-all">
+                            <span class="w-5 h-5 rounded-md bg-brand-500/20 text-brand-400 text-[10px] font-bold flex items-center justify-center">5</span>
+                            <span>Third-Party Tracking</span>
+                        </a>
+                        <a href="#section-6" class="toc-link flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition-all">
+                            <span class="w-5 h-5 rounded-md bg-brand-500/20 text-brand-400 text-[10px] font-bold flex items-center justify-center">6</span>
+                            <span>Data Control & Deletion</span>
+                        </a>
+                        <a href="#contact" class="toc-link flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-800/80 transition-all">
+                            <span class="w-5 h-5 rounded-md bg-neon-emerald/20 text-neon-emerald text-[10px] font-bold flex items-center justify-center">7</span>
+                            <span>Contact & Grievance Officer</span>
+                        </a>
+                    </nav>
+                </div>
+
+                <!-- Web Portal Banner Box -->
+                <div class="glass-card p-5 rounded-2xl border-brand-500/30 bg-gradient-to-b from-brand-900/30 to-transparent">
+                    <div class="flex items-start gap-3">
+                        <i class="fa-solid fa-globe text-brand-400 text-xl mt-1"></i>
+                        <div>
+                            <h4 class="text-xs font-bold text-white mb-1">Try HEPTA Web App</h4>
+                            <p class="text-[11px] text-slate-300 leading-relaxed mb-3">
+                                Access your workspace directly in browser at weekstack-web.vercel.app.
+                            </p>
+                            <a href="https://weekstack-web.vercel.app/" target="_blank" rel="noopener noreferrer" 
+                               class="text-[11px] font-bold text-brand-400 hover:text-brand-300 inline-flex items-center gap-1.5">
+                                <span>Open Web App</span>
+                                <i class="fa-solid fa-arrow-right text-[9px]"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </aside>
+
+            <main class="lg:col-span-8 flex flex-col gap-6 w-full relative z-10" id="policy-content">
+
+                <!-- Section 1 -->
+                <section id="section-1" class="policy-section glass-card rounded-2xl p-6 sm:p-8 framer-reveal w-full block">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-9 h-9 rounded-xl bg-brand-500/20 border border-brand-500/30 text-brand-400 flex items-center justify-center text-sm font-bold shrink-0">
+                            1
+                        </div>
+                        <h2 class="text-xl font-bold text-white tracking-tight">Local-First Data Storage</h2>
+                    </div>
+                    <div class="space-y-3 text-slate-300 text-sm leading-relaxed">
+                        <p>
+                            HEPTA is architected with a strict privacy-first, local-first philosophy. All of your tasks, notes, routines, schedules, and milestones are stored securely on your local device hardware using encrypted storage mechanisms.
+                        </p>
+                        <p>
+                            We do not transmit, sync, or backup your tasks to external cloud servers without your explicit, deliberate action. Your personal productivity data remains on your hardware.
+                        </p>
+                    </div>
+                </section>
+
+                <!-- Section 2 -->
+                <section id="section-2" class="policy-section glass-card rounded-2xl p-6 sm:p-8 framer-reveal w-full block">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-9 h-9 rounded-xl bg-brand-500/20 border border-brand-500/30 text-brand-400 flex items-center justify-center text-sm font-bold shrink-0">
+                            2
+                        </div>
+                        <h2 class="text-xl font-bold text-white tracking-tight">Biometric Vault Security</h2>
+                    </div>
+                    <div class="space-y-3 text-slate-300 text-sm leading-relaxed">
+                        <p>
+                            The HEPTA Vault utilizes native Android Biometric APIs (Fingerprint / Face Unlock). Your sensitive biometric signature never leaves your device's Secure Element / Trusted Execution Environment (TEE).
+                        </p>
+                        <p>
+                            Biometric authentication data is completely inaccessible to the HEPTA app code itself and is handled strictly by OS hardware drivers.
+                        </p>
+                    </div>
+                </section>
+
+                <!-- Section 3 -->
+                <section id="section-3" class="policy-section glass-card rounded-2xl p-6 sm:p-8 framer-reveal w-full block">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-9 h-9 rounded-xl bg-brand-500/20 border border-brand-500/30 text-brand-400 flex items-center justify-center text-sm font-bold shrink-0">
+                            3
+                        </div>
+                        <h2 class="text-xl font-bold text-white tracking-tight">Calendar & Grid Integration</h2>
+                    </div>
+                    <div class="space-y-3 text-slate-300 text-sm leading-relaxed">
+                        <p>
+                            If you choose to grant Calendar permissions to HEPTA, the app reads your calendar entries strictly locally to render your daily work schedule on the interface.
+                        </p>
+                        <p>
+                            We do not store, modify, or transmit your calendar data externally to our servers or any third parties under any circumstances.
+                        </p>
+                    </div>
+                </section>
+
+                <!-- Section 4 -->
+                <section id="section-4" class="policy-section glass-card rounded-2xl p-6 sm:p-8 border-neon-purple/30 framer-reveal w-full block">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-9 h-9 rounded-xl bg-neon-purple/20 border border-neon-purple/30 text-neon-purple flex items-center justify-center text-sm font-bold shrink-0">
+                            4
+                        </div>
+                        <h2 class="text-xl font-bold text-white tracking-tight">HEPTA Web Application (WeekStack)</h2>
+                    </div>
+                    <div class="space-y-3 text-slate-300 text-sm leading-relaxed">
+                        <p>
+                            HEPTA operates a dedicated web interface accessible at <a href="https://weekstack-web.vercel.app/" target="_blank" class="text-neon-cyan font-semibold hover:underline">https://weekstack-web.vercel.app/</a>.
+                        </p>
+                        <p>
+                            The Web Client functions as a progressive, offline-capable application. When you create boards or edit schedules on <strong class="text-white">WeekStack</strong>:
+                        </p>
+                        <ul class="list-disc pl-5 space-y-1.5 text-slate-300">
+                            <li>All data is written directly to your browser's local storage and IndexedDB.</li>
+                            <li>No network requests sending task contents or personal notes are made to remote databases.</li>
+                            <li>Your browser session remains self-contained. Clearing browser site data erases the web storage completely.</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- Section 5 -->
+                <section id="section-5" class="policy-section glass-card rounded-2xl p-6 sm:p-8 framer-reveal w-full block">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-9 h-9 rounded-xl bg-brand-500/20 border border-brand-500/30 text-brand-400 flex items-center justify-center text-sm font-bold shrink-0">
+                            5
+                        </div>
+                        <h2 class="text-xl font-bold text-white tracking-tight">Third-Party Tracking & Analytics</h2>
+                    </div>
+                    <div class="space-y-3 text-slate-300 text-sm leading-relaxed">
+                        <p>
+                            HEPTA mobile and web versions are free of intrusive ad-tracking pixels, third-party user profile builders, or invasive telemetry SDKs.
+                        </p>
+                        <p>
+                            We do not monetize, sell, or exchange user usage data because we do not collect or possess it.
+                        </p>
+                    </div>
+                </section>
+
+                <!-- Section 6 -->
+                <section id="section-6" class="policy-section glass-card rounded-2xl p-6 sm:p-8 framer-reveal w-full block">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-9 h-9 rounded-xl bg-brand-500/20 border border-brand-500/30 text-brand-400 flex items-center justify-center text-sm font-bold shrink-0">
+                            6
+                        </div>
+                        <h2 class="text-xl font-bold text-white tracking-tight">Data Control & Deletion</h2>
+                    </div>
+                    <div class="space-y-3 text-slate-300 text-sm leading-relaxed">
+                        <p>
+                            Because HEPTA is local-first, you hold full authority over your data lifetime.
+                        </p>
+                        <p>
+                            Uninstalling the Android app, clearing application storage in system settings, or clearing browser cache for <strong class="text-white">weekstack-web.vercel.app</strong> will instantly and permanently erase all locally stored databases.
+                        </p>
+                    </div>
+                </section>
+
+                <!-- Contact & Grievance Section -->
+                <section id="contact" class="policy-section glass-card rounded-2xl p-6 sm:p-8 border-brand-500/40 relative overflow-hidden framer-reveal w-full block">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-600 to-neon-purple text-white flex items-center justify-center text-sm font-bold shadow-lg shadow-brand-500/30 shrink-0">
+                            7
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold text-white tracking-tight">Contact Us & Grievance Officer</h2>
+                            <p class="text-xs text-slate-400">Official developer & compliance channels</p>
+                        </div>
+                    </div>
+
+                    <p class="text-slate-300 text-sm leading-relaxed mb-6">
+                        For questions, technical feedback, security disclosures, or official compliance inquiries, connect with the development team at <strong>Zincstate</strong> using the credentials below.
+                    </p>
+
+                    <!-- Contact Details Box -->
+                    <div class="bg-slate-950/90 rounded-2xl p-6 border border-slate-800 space-y-4 shadow-inner">
+                        
+                        <!-- Developer Support Email -->
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-800/80">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-brand-500/10 text-brand-400 flex items-center justify-center text-sm shrink-0">
+                                    <i class="fa-solid fa-code"></i>
+                                </div>
+                                <div>
+                                    <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 block">Developer Support Email</span>
+                                    <a href="mailto:onlycodes.learning@gmail.com" class="text-sm font-bold text-brand-400 hover:text-brand-300 hover:underline transition-colors">
+                                        onlycodes.learning@gmail.com
+                                    </a>
+                                </div>
+                            </div>
+                            <button onclick="copyToClipboard('onlycodes.learning@gmail.com', 'Developer Support Email')" 
+                                    class="no-print self-start sm:self-auto px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white text-xs font-semibold transition-all border border-slate-700/60 flex items-center gap-1.5">
+                                <i class="fa-regular fa-copy"></i>
+                                <span>Copy Email</span>
+                            </button>
+                        </div>
+
+                        <!-- Grievance Officer Email -->
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-800/80">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-neon-emerald/10 text-neon-emerald flex items-center justify-center text-sm shrink-0">
+                                    <i class="fa-solid fa-user-shield"></i>
+                                </div>
+                                <div>
+                                    <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 block">Designated Grievance Officer</span>
+                                    <a href="mailto:onlycodes.learning@gmail.com" class="text-sm font-bold text-neon-emerald hover:text-emerald-300 hover:underline transition-colors">
+                                        onlycodes.learning@gmail.com
+                                    </a>
+                                </div>
+                            </div>
+                            <button onclick="copyToClipboard('onlycodes.learning@gmail.com', 'Grievance Officer Email')" 
+                                    class="no-print self-start sm:self-auto px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white text-xs font-semibold transition-all border border-slate-700/60 flex items-center gap-1.5">
+                                <i class="fa-regular fa-copy"></i>
+                                <span>Copy Email</span>
+                            </button>
+                        </div>
+
+                        <!-- Organization Info -->
+                        <div class="flex items-center justify-between pt-1">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-neon-cyan/10 text-neon-cyan flex items-center justify-center text-sm shrink-0">
+                                    <i class="fa-solid fa-building"></i>
+                                </div>
+                                <div>
+                                    <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 block">Publisher & Maintainer</span>
+                                    <span class="text-sm font-bold text-slate-100">Zincstate</span>
+                                </div>
+                            </div>
+                            <span class="px-3 py-1 rounded-full bg-neon-emerald/10 text-neon-emerald text-[11px] font-bold border border-neon-emerald/20">
+                                Verified Compliant
+                            </span>
+                        </div>
+
+                    </div>
+                </section>
+
+            </main>
+        </div>
+
+        <!-- Footer -->
+        <footer class="mt-20 pt-8 border-t border-slate-800/80 text-center text-xs text-slate-400 space-y-4">
+            <div class="flex items-center justify-center gap-3 text-slate-300 font-semibold flex-wrap">
+                <span>HEPTA Privacy Portal</span>
+                <span>•</span>
+                <a href="https://weekstack-web.vercel.app/" target="_blank" class="text-brand-400 hover:underline">HEPTA Web Client (WeekStack)</a>
+                <span>•</span>
+                <span>Zincstate</span>
+            </div>
+            <p>&copy; 2026 Zincstate. Built with Poppins typography & Privacy-By-Design principles.</p>
+            <div class="no-print pt-2">
+                <a href="#" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-slate-900 hover:bg-slate-800 border border-slate-800 text-brand-400 hover:text-brand-300 transition-all">
+                    <span>Back to Top</span>
+                    <i class="fa-solid fa-arrow-up text-[10px]"></i>
+                </a>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+        <div class="bg-slate-950 text-white text-xs font-semibold px-5 py-3.5 rounded-2xl shadow-2xl border border-brand-500/50 flex items-center gap-3">
+            <i class="fa-solid fa-circle-check text-neon-emerald text-base"></i>
+            <span id="toast-message">Action completed</span>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observerOptions = {
+                threshold: 0.05,
+                rootMargin: '0px 0px -30px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.framer-reveal').forEach(el => observer.observe(el));
+        });
+
+        // Background Particles
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 0.5;
+                this.speedX = (Math.random() - 0.5) * 0.3;
+                this.speedY = (Math.random() - 0.5) * 0.3;
+                this.opacity = Math.random() * 0.4 + 0.2;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+            }
+
+            draw() {
+                ctx.fillStyle = `rgba(99, 102, 241, ${this.opacity})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < 40; i++) {
+            particles.push(new Particle());
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        function copyToClipboard(text, label) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => showToast(`${label} copied!`)).catch(() => fallbackCopy(text, label));
+            } else {
+                fallbackCopy(text, label);
+            }
+        }
+
+        function fallbackCopy(text, label) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                showToast(`${label} copied!`);
+            } catch (err) {
+                showToast('Failed to copy');
+            }
+            document.body.removeChild(textarea);
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            const message = document.getElementById('toast-message');
+            message.innerText = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        function filterSections() {
+            const query = document.getElementById('search-input').value.toLowerCase().trim();
+            const sections = document.querySelectorAll('.policy-section');
+
+            sections.forEach(section => {
+                const text = section.innerText.toLowerCase();
+                if (text.includes(query)) {
+                    section.style.display = 'block';
+                } else {
+                    section.style.display = 'none';
+                }
+            });
+        }
+
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('.policy-section');
+            const navLinks = document.querySelectorAll('.toc-link');
+
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 140;
+                if (window.scrollY >= sectionTop) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('bg-brand-500/20', 'text-brand-400', 'font-bold');
+                if (current && link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('bg-brand-500/20', 'text-brand-400', 'font-bold');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
